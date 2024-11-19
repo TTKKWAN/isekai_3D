@@ -1,0 +1,45 @@
+# Unity 관련 .gitignore 예제
+
+# 프로젝트 임시 데이터
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+
+# UserSettings 폴더
+UserSettings/
+
+# Visual Studio 관련 파일
+.vscode/
+*.csproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.opendb
+*.VC.db
+
+# IDE 관련 설정 파일
+.idea/
+*.iml
+*.ipr
+
+# 파일 확장자
+*.log
+*.swp
+*.lock
+*.cache
+*.bak
+*.unityproj
+*.pidb.meta
+*.pidb
+
+# OS 관련
+.DS_Store
+Thumbs.db
