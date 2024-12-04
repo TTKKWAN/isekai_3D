@@ -108,10 +108,19 @@ namespace InteractiveCalculator
                 Input += (decimal)number / (decimal)Mathf.Pow(10, ++InputDecimals);
             }
 
+            // 4221 입력 시 계산기 사라지게 처리
+            if (Input == 4221)
+            {
+                Debug.Log("4221 입력됨, 계산기 사라짐!");
+                gameObject.SetActive(false); // 오브젝트 비활성화
+                return; // 이후 로직 실행 방지
+            }
+
             CurrentDisplayMode = DisplayMode.input;
             lastPressWasEquals = false;
             UpdateDisplay();
         }
+
 
         public void OnPressedDecimal()
         {
@@ -177,7 +186,7 @@ namespace InteractiveCalculator
                         break;
                     case "√":
                     case "sqrt":
-                        Value = (decimal) Mathf.Sqrt((float) Value);
+                        Value = (decimal)Mathf.Sqrt((float)Value);
                         break;
                     default:
                         Debug.LogError("Unknown operator '" + currentOperator + "'");
@@ -198,7 +207,7 @@ namespace InteractiveCalculator
         private void UpdateDisplay()
         {
             _displayText.gameObject.SetActive(isOn);
-            
+
             if (!isOn) return;
 
             if (CurrentDisplayMode == DisplayMode.input)
