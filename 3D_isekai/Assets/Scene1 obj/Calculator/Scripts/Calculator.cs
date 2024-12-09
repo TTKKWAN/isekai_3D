@@ -21,8 +21,19 @@ namespace InteractiveCalculator
         public int InputDecimals { get; private set; }
         public bool UsingDecimals { get; private set; }
         private bool lastPressWasEquals;
-        private string currentOperator;
+        private string currentOperator; // 기존 private 연산자
+
         public bool isOn;
+
+        [Header("Objects to Disable and Door to Open")]
+        [SerializeField] private GameObject objectToHide; // 숨길 오브젝트
+        [SerializeField] private Animator doorAnimator;  // 문의 애니메이터
+
+        // 연산자에 접근할 수 있는 public 속성 추가
+        public string CurrentOperator
+        {
+            get { return currentOperator; }
+        }
 
         void Start()
         {
@@ -73,9 +84,14 @@ namespace InteractiveCalculator
                     if (CurrentDisplayMode == DisplayMode.input)
                         OnPressedEquals();
                     currentOperator = op;
+
+                    // 연산자 선택 시 디스플레이 업데이트
+                    UpdateDisplay();
+
                     CurrentDisplayMode = DisplayMode.value;
                     lastPressWasEquals = false;
                     break;
+
                 case "√":
                 case "sqrt":
                     if (CurrentDisplayMode == DisplayMode.input)
@@ -85,11 +101,13 @@ namespace InteractiveCalculator
                     lastPressWasEquals = false;
                     OnPressedEquals();
                     break;
+
                 default:
                     Debug.LogError("Unknown operator '" + op + "'");
                     break;
             }
         }
+
 
         public void OnPressedNumber(int number)
         {
@@ -108,19 +126,10 @@ namespace InteractiveCalculator
                 Input += (decimal)number / (decimal)Mathf.Pow(10, ++InputDecimals);
             }
 
-            // 4221 입력 시 계산기 사라지게 처리
-            if (Input == 4221)
-            {
-                Debug.Log("4221 입력됨, 계산기 사라짐!");
-                gameObject.SetActive(false); // 오브젝트 비활성화
-                return; // 이후 로직 실행 방지
-            }
-
             CurrentDisplayMode = DisplayMode.input;
             lastPressWasEquals = false;
             UpdateDisplay();
         }
-
 
         public void OnPressedDecimal()
         {
@@ -167,6 +176,20 @@ namespace InteractiveCalculator
         {
             try
             {
+                if (Input == 4221)
+                {
+                    Debug.Log("4221 입력 후 = 버튼 눌림, 계산기 및 오브젝트 숨김, 문 열림!");
+                    gameObject.SetActive(false); // 계산기 비활성화
+                    if (objectToHide != null)
+                        objectToHide.SetActive(false); // 추가 오브젝트 비활성화
+                    if (doorAnimator != null)
+                        doorAnimator.SetTrigger("Open"); // 문 열기 애니메이션 트리거
+                    return; // 이후 로직 실행 방지
+                }
+                // var triggerController = FindObjectOfType<MinusController>();
+
+                // triggerController.SetMinusPressed(); // MinusTriggerController에 - 버튼 누름 알림
+
                 switch (currentOperator)
                 {
                     case "-":
@@ -206,9 +229,22 @@ namespace InteractiveCalculator
 
         private void UpdateDisplay()
         {
+            if (_displayText == null)
+            {
+                Debug.LogError("Error: _displayText가 null입니다. Unity 에디터에서 Text 컴포넌트를 연결하세요.");
+                return;
+            }
+
             _displayText.gameObject.SetActive(isOn);
 
             if (!isOn) return;
+
+            // 연산자가 "-"일 때 "-" 기호만 표시
+            if (currentOperator == "-")
+            {
+                _displayText.text = "-";
+                return;
+            }
 
             if (CurrentDisplayMode == DisplayMode.input)
             {
@@ -218,6 +254,7 @@ namespace InteractiveCalculator
 
             _displayText.text = FormatDecimal(Normalize(Value), DigitsAfterDecimal(Value));
         }
+
 
         string FormatDecimal(decimal val, int decimalDigits)
         {
@@ -231,6 +268,7 @@ namespace InteractiveCalculator
 
             return val.ToString($"G7", new CultureInfo("en-US"));
         }
+
         static int DigitsAfterDecimal(decimal value)
         {
             return ((SqlDecimal)value).Scale;
@@ -239,6 +277,11 @@ namespace InteractiveCalculator
         public static decimal Normalize(decimal value)
         {
             return value / 1.000000000000000000000000000000000m;
+        }
+
+        public bool IsEqualsPressed()
+        {
+            return lastPressWasEquals;
         }
     }
 }

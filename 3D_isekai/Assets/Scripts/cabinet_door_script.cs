@@ -15,6 +15,9 @@ public class CabinetController : MonoBehaviour
     private Quaternion door2ClosedRotation; // 두 번째 문 닫힌 상태
     private Quaternion door2OpenRotation;   // 두 번째 문 열린 상태
 
+    [Header("Dependencies")]
+    public GameObject calculator; // 계산기 오브젝트 (사용자가 지정)
+
     void Start()
     {
         // 첫 번째 문 초기 회전값 설정
@@ -45,7 +48,15 @@ public class CabinetController : MonoBehaviour
             {
                 if (hit.transform == this.transform) // 클릭한 오브젝트가 캐비넷인지 확인
                 {
-                    isOpen = !isOpen; // 문 상태 전환
+                    // Calculator가 사라진 경우에만 문 상태를 전환
+                    if (calculator == null || !calculator.activeSelf)
+                    {
+                        isOpen = !isOpen; // 문 상태 전환
+                    }
+                    else
+                    {
+                        Debug.Log("계산기가 아직 활성화 상태입니다. 문을 열 수 없습니다.");
+                    }
                 }
             }
         }
