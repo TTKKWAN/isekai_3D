@@ -10,6 +10,9 @@ public class Player : MonoBehaviour
     public float bobAmplitude = 0.1f; // 흔들림 크기
     public Transform cameraTransform; // 플레이어의 카메라
 
+    public bool isKey2 = false; // 키 획득 여부
+    public bool isPin = false;
+
     private CharacterController characterController;
     private float bobTimer = 0f;
     private Vector3 cameraInitialPosition;
@@ -29,6 +32,12 @@ public class Player : MonoBehaviour
         // 마우스 잠금 상태
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+
+        if (ClickInit.isReturn) {
+            transform.position = new Vector3((float) 736.22, (float) 2.53, 683);
+        }
+
     }
 
     void Update()
