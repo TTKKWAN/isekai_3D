@@ -191,6 +191,11 @@ namespace InteractiveCalculator
                             keyRigidbody.isKinematic = false; // 물리 활성화
                             keyRigidbody.AddForce(Vector3.down * 5f, ForceMode.Impulse); // 아래로 힘 추가
                         }
+                        AudioSource keyAudio = keyObject.GetComponent<AudioSource>();
+                        if (keyAudio != null)
+                        {
+                            keyAudio.PlayDelayed((float) 0.4);
+                        }
                     }
                     return; // 이후 로직 실행 방지
                 }

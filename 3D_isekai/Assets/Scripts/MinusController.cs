@@ -102,6 +102,10 @@ public class MinusTriggerController : MonoBehaviour
                 Rigidbody rb = target.GetComponent<Rigidbody>();
                 if (rb != null)
                 {
+                    AudioSource rbsound = rb.GetComponent<AudioSource>();
+                    if (rbsound != null) {
+                        rbsound.PlayDelayed((float) 0.2);
+                    }
                     rb.isKinematic = false; // 물리 계산 활성화
                     Debug.Log($"{target.name}에 중력이 작용하기 시작했습니다.");
                 }

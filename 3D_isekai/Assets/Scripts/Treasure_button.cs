@@ -35,7 +35,16 @@ public class button_door : MonoBehaviour
         }
 
         // 오브젝트 클릭 시 상태 전환
-        isOpen = !isOpen;
+        if (!isOpen) {
+            isOpen = !isOpen;
+            AudioSource doorsound = door.GetComponent<AudioSource>();
+
+            if(doorsound != null) {
+                doorsound.Play();
+            }
+        }
+
+        
     }
 
     void Update()
