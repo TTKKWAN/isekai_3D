@@ -28,6 +28,7 @@ namespace InteractiveCalculator
         [Header("Objects to Disable and Door to Open")]
         [SerializeField] private GameObject objectToHide; // 숨길 오브젝트
         [SerializeField] private Animator doorAnimator;  // 문의 애니메이터
+        [SerializeField] private GameObject Cabinet;
 
         // 연산자에 접근할 수 있는 public 속성 추가
         public string CurrentOperator
@@ -178,8 +179,12 @@ namespace InteractiveCalculator
             {
                 if (Input == 4221)
                 {
+                    AudioSource CabinetAudio = Cabinet.GetComponent<AudioSource>();
                     Debug.Log("4221 입력 후 = 버튼 눌림, 계산기 및 오브젝트 숨김, 문 열림!");
                     gameObject.SetActive(false); // 계산기 비활성화
+                    if (CabinetAudio != null) {
+                        CabinetAudio.Play();
+                    }
                     if (objectToHide != null)
                         objectToHide.SetActive(false); // 추가 오브젝트 비활성화
                     if (doorAnimator != null)

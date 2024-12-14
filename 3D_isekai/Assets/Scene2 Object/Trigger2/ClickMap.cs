@@ -10,11 +10,17 @@ public class ClickMap : MonoBehaviour
     private void OnMouseDown()
     {
         Player player = FindObjectOfType<Player>();
+        AudioSource PinAudio = PinOnMap.GetComponent<AudioSource>();
 
-        if (PinOnMap != null && player != null && player.isPin)
+        if (PinOnMap != null && player != null && player.isPin && Chess != null)
         {
             PinOnMap.SetActive(true);
             Chess.SetActive(true);
+            if (PinAudio != null)
+            {
+                PinAudio.Play();
+            }
+
         }
     }
 }

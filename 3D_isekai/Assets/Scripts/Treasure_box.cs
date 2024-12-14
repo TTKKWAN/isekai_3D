@@ -9,6 +9,8 @@ public class BoxLidController : MonoBehaviour
     public GameObject showOnOpen; // 뚜껑이 열리면 보이게 할 오브젝트
     public GameObject hideOnOpen; // 뚜껑이 열리면 숨길 오브젝트
 
+    [SerializeField] private GameObject box;
+
     public bool IsLidOpen()
     {
         return isOpen; // 뚜껑이 열려 있는 상태를 반환
@@ -51,6 +53,11 @@ public class BoxLidController : MonoBehaviour
         if (!isOpen) // 한 번만 실행
         {
             isOpen = true;
+            AudioSource boxsound = box.GetComponent<AudioSource>();
+
+            if (boxsound != null) {
+                boxsound.Play();
+            }
 
             // Box Collider와 Rigidbody 비활성화
             if (thisCollider != null)
@@ -67,6 +74,9 @@ public class BoxLidController : MonoBehaviour
             // 오브젝트 상태 변경
             if (showOnOpen != null) showOnOpen.SetActive(true);  // 보이게 설정
             if (hideOnOpen != null) hideOnOpen.SetActive(false); // 숨기기 설정
+
+            
+
         }
     }
 

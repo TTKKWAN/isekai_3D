@@ -6,6 +6,7 @@ public class ObjectSlidingOnClick : MonoBehaviour
     [SerializeField] private GameObject[] slidingObjects; // 슬라이딩할 오브젝트 배열
     [SerializeField] private float slideDistance = 2f; // 슬라이딩 거리
     [SerializeField] private float slideSpeed = 2f; // 슬라이딩 속도
+    [SerializeField] private GameObject Cabinet;
 
     private bool isSliding = false; // 슬라이딩 여부
     private Vector3[] slidingTargetPositions; // 각 오브젝트의 슬라이딩 목표 위치
@@ -31,6 +32,7 @@ public class ObjectSlidingOnClick : MonoBehaviour
 
             for (int i = 0; i < slidingObjects.Length; i++)
             {
+                
                 if (slidingObjects[i] != null)
                 {
                     slidingObjects[i].transform.position = Vector3.MoveTowards(
@@ -38,6 +40,7 @@ public class ObjectSlidingOnClick : MonoBehaviour
                         slidingTargetPositions[i],
                         slideSpeed * Time.deltaTime
                     );
+                    
 
                     // 목표 위치에 도달하지 않은 오브젝트가 있다면 false
                     if (Vector3.Distance(slidingObjects[i].transform.position, slidingTargetPositions[i]) >= 0.01f)
@@ -63,6 +66,10 @@ public class ObjectSlidingOnClick : MonoBehaviour
                 // 스크립트가 붙어있는 오브젝트를 클릭했는지 확인
                 if (hit.transform.gameObject == gameObject)
                 {
+                    AudioSource Cabinetsound = Cabinet.GetComponent<AudioSource>();
+                    if (Cabinetsound != null) {
+                        Cabinetsound.Play();
+                    }
                     StartSliding();
                     Debug.Log($"{gameObject.name}을(를) 클릭했습니다. 모든 오브젝트가 슬라이딩합니다.");
                 }

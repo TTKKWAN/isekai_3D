@@ -9,6 +9,7 @@ public class SlideOnClick : MonoBehaviour
     private bool isSliding = false; // 슬라이딩 상태 확인
     private Vector3 startPosition; // 초기 위치
     private Vector3 targetPosition; // 이동 목표 위치
+    [SerializeField] private GameObject secret;
 
     void Start()
     {
@@ -30,6 +31,10 @@ public class SlideOnClick : MonoBehaviour
         {
             isSliding = true;
 
+        }
+        AudioSource secretsound = secret.GetComponent<AudioSource>();
+        if (secretsound != null) {
+            secretsound.Play();
         }
     }
 

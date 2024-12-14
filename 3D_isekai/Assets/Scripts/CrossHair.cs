@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class CrossHair : MonoBehaviour
 {
     public Image crosshairImage; // Crosshair 이미지
+    [SerializeField] private Player player;
 
     void Start()
     {
@@ -15,10 +16,11 @@ public class CrossHair : MonoBehaviour
 
     void Update()
     {
-        // 예: ESC 키로 조준점 숨기기/표시
+        
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             crosshairImage.enabled = !crosshairImage.enabled; // 토글
         }
+        
     }
 }

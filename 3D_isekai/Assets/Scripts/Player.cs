@@ -16,6 +16,11 @@ public class Player : MonoBehaviour
     private CharacterController characterController;
     private float bobTimer = 0f;
     private Vector3 cameraInitialPosition;
+    public bool isEnding = false;
+
+    
+    [SerializeField] private GameObject uiButton1; // UI 버튼 오브젝트
+    [SerializeField] private GameObject uiButton2;
 
     void Start()
     {
@@ -37,6 +42,7 @@ public class Player : MonoBehaviour
         if (ClickInit.isReturn) {
             transform.position = new Vector3((float) 736.22, (float) 2.53, 683);
         }
+        isEnding = false;
 
     }
 
@@ -45,48 +51,76 @@ public class Player : MonoBehaviour
         // 입력값 초기화
         float horizontal = 0f;
         float vertical = 0f;
+        
 
-        if (Input.GetKey(KeyCode.W)) vertical += 1f; // W 키
-        if (Input.GetKey(KeyCode.S)) vertical -= 1f; // S 키
-        if (Input.GetKey(KeyCode.A)) horizontal -= 1f; // A 키
-        if (Input.GetKey(KeyCode.D)) horizontal += 1f; // D 키
+        if (!isEnding) {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
 
-        float currentSpeed = moveSpeed;
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            currentSpeed *= sprintMultiplier;
-        }
-
-        // 이동 방향 계산
-        Vector3 moveDirection = transform.right * horizontal + transform.forward * vertical;
-        characterController.Move(moveDirection.normalized * currentSpeed * Time.deltaTime);
-
-        // Head Bobbing 처리
-        if (moveDirection.magnitude > 0f) // 움직임이 있을 때만
-        {
-            bobTimer += Time.deltaTime * bobFrequency;
-            float bobOffset = Mathf.Sin(bobTimer) * bobAmplitude;
-            cameraTransform.localPosition = cameraInitialPosition + new Vector3(0, bobOffset, 0);
-        }
-        else
-        {
-            // 움직임이 없을 때 카메라를 원래 위치로 복원
-            bobTimer = 0f;
-            cameraTransform.localPosition = cameraInitialPosition;
-        }
-
-        // ESC 키로 마우스 잠금 해제
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (Cursor.visible) {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                isEnding = !isEnding;
+                uiButton1.SetActive(true); // UI 버튼 숨기기
+                uiButton2.SetActive(true);
+                
             }
-            else {
-                Cursor.lockState = CursorLockMode.None; // 잠금 해제
-                Cursor.visible = true;                 // 커서 표시
-            }
+
+            if (Input.GetKey(KeyCode.W)) vertical += 1f; // W 키
+            if (Input.GetKey(KeyCode.S)) vertical -= 1f; // S 키
+            if (Input.GetKey(KeyCode.A)) horizontal -= 1f; // A 키
+            if (Input.GetKey(KeyCode.D)) horizontal += 1f; // D 키
+
+            // ESC 키로 마우스 잠금 해제
             
+            float currentSpeed = moveSpeed;
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                currentSpeed *= sprintMultiplier;
+            }
+
+            // 이동 방향 계산
+            Vector3 moveDirection = transform.right * horizontal + transform.forward * vertical;
+            characterController.Move(moveDirection.normalized * currentSpeed * Time.deltaTime);
+
+            // Head Bobbing 처리
+            if (moveDirection.magnitude > 0f) // 움직임이 있을 때만
+            {
+                bobTimer += Time.deltaTime * bobFrequency;
+                float bobOffset = Mathf.Sin(bobTimer) * bobAmplitude;
+                cameraTransform.localPosition = cameraInitialPosition + new Vector3(0, bobOffset, 0);
+            }
+            else
+            {
+                // 움직임이 없을 때 카메라를 원래 위치로 복원
+                bobTimer = 0f;
+                cameraTransform.localPosition = cameraInitialPosition;
+            }
+
         }
+        else {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                isEnding = !isEnding;
+                uiButton1.SetActive(false); // UI 버튼 숨기기
+                uiButton2.SetActive(false);
+                
+            }
+            cameraTransform.localPosition = cameraInitialPosition;
+            if (!characterController.enabled)
+            {
+                characterController.enabled = true;
+            }
+        }
+
+        
+
+        
+    }
+    public void End()
+    {
+        isEnding = true; // 이동 비활성화
     }
 }

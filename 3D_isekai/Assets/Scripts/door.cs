@@ -11,6 +11,7 @@ public class DoorController : MonoBehaviour
     private bool isOpen = false; // 문이 열려 있는지 여부
     private Quaternion closedRotation; // 닫힌 상태의 회전값
     private Quaternion openRotation;   // 열린 상태의 회전값
+    [SerializeField] private GameObject Door;
 
     void Start()
     {
@@ -24,12 +25,18 @@ public class DoorController : MonoBehaviour
         // 마우스 클릭 감지
         if (Input.GetMouseButtonDown(0)) // 왼쪽 마우스 클릭
         {
+            
             // 화면 중앙에서 Ray 발사
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
             {
                 if (hit.transform == transform) // 클릭한 오브젝트가 문인지 확인
                 {
+                    AudioSource Doorsound = Door.GetComponent<AudioSource>();
+
+                    if (Doorsound != null) {
+                        Doorsound.Play();
+                    }
                     isOpen = !isOpen; // 문 상태 전환
                 }
             }
